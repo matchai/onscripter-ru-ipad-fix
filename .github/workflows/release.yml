@@ -3,6 +3,9 @@ name: Build patched IPA
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   patch:
     name: Patch IPA
