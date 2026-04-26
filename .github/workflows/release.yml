@@ -1,0 +1,48 @@
+name: Build patched IPA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  patch:
+    name: Patch IPA
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download original IPA
+        run: |
+          curl -sL "https://github.com/umineko-project/onscripter-ru/releases/download/untagged-b87158b67d23f44f53d3/onscripter-ru_ios_r3570.zip" -o original.zip
+          unzip -q original.zip
+          mv onscripter-ru-ios.ipa original.ipa
+
+      - name: Patch
+        run: ./patch-ipa.sh original.ipa onscripter-ru-ios-patched.ipa
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: onscripter-ru-ios-patched
+          path: onscripter-ru-ios-patched.ipa
+
+      - name: Create release
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="r3570-ipad-fix"
+          gh release delete "$TAG" --yes 2>/dev/null || true
+          gh release create "$TAG" \
+            --title "ONScripter-RU r3570 (iPad fix)" \
+            --notes "Patched IPA that fixes letterboxing on modern iPads.
+
+          **What changed from the original r3570 release:**
+          - Binary thinned to arm64 (drops unused armv7/armv7s)
+          - Mach-O SDK version bumped from 11.4 to 18.0 (exits iOS compatibility mode)
+          - LaunchScreen.storyboard added (tells iOS the app supports all screen sizes)
+          - Legacy launch images removed
+
+          **How to install:** Download the IPA and sideload with [Sideloadly](https://sideloadly.io), [AltStore](https://altstore.io), or similar.
+
+          **Game files:** After installing, connect your iPad and transfer game files via Finder (Files tab)." \
+            onscripter-ru-ios-patched.ipa
