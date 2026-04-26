@@ -6,7 +6,7 @@ The original IPA was built with Xcode 9.4 / iOS SDK 11.4. On iPads with screen s
 
 ## Download
 
-Grab the patched IPA from [Releases](../../releases) and sideload with [Sideloadly](https://sideloadly.io), [AltStore](https://altstore.io), or similar.
+Grab the patched IPA from the [latest release](https://github.com/matchai/onscripter-ru-ipad-fix/releases/latest) and sideload with [Sideloadly](https://sideloadly.io), [AltStore](https://altstore.io), or similar.
 
 After installing, connect your iPad and transfer game files via Finder (Files tab).
 
