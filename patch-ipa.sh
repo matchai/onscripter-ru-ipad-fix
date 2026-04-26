@@ -14,7 +14,7 @@ for cmd in lipo vtool xcrun zip unzip /usr/libexec/PlistBuddy; do
 done
 
 WORK=$(mktemp -d)
-trap "rm -rf $WORK" EXIT
+trap 'rm -rf "$WORK"' EXIT
 
 unzip -q "$INPUT" -d "$WORK"
 APP="$WORK/Payload/onscripter-ru-ios.app"
